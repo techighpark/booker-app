@@ -3,20 +3,21 @@ import AppLoading from "expo-app-loading";
 import { Ionicons } from "@expo/vector-icons";
 import * as Font from "expo-font";
 import { Asset } from "expo-asset";
-import LoggedOutNav from "./src/navigators/LoggedOutNav";
 import { NavigationContainer } from "@react-navigation/native";
 import { Appearance, AppearanceProvider } from "react-native-appearance";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "styled-components/native";
 import { darkMode, lightMode } from "./src/themeStyles";
+import LoggedOutNav from "./src/navigators/LoggedOutNav";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
   const [theme, setTheme] = useState(Appearance.getColorScheme());
 
   useEffect(() => {
-    Appearance.addChangeListener(scheme => {
+    const subscription = Appearance.addChangeListener(scheme => {
       setTheme(scheme.colorScheme);
     });
+    return () => subscription.remove();
   }, []);
 
   const onFinish = () => setLoading(false);
