@@ -8,6 +8,10 @@ import { Appearance, AppearanceProvider } from "react-native-appearance";
 import { ThemeProvider } from "styled-components/native";
 import { darkMode, lightMode } from "./src/themeStyles";
 import LoggedOutNav from "./src/navigators/LoggedOutNav";
+import { ApolloProvider } from "@apollo/client";
+import { client } from "./apollo";
+import { AppRegistry } from "react-native-web";
+import { Text } from "react-nativ";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -40,12 +44,16 @@ export default function App() {
   }
 
   return (
-    <ThemeProvider theme={theme === "light" ? lightMode : darkMode}>
-      <AppearanceProvider>
-        <NavigationContainer>
-          <LoggedOutNav></LoggedOutNav>
-        </NavigationContainer>
-      </AppearanceProvider>
-    </ThemeProvider>
+    <ApolloProvider client={client}>
+      <ThemeProvider theme={theme === "light" ? lightMode : darkMode}>
+        <AppearanceProvider>
+          <NavigationContainer fallback={<Text>Loading...</Text>}>
+            <LoggedOutNav></LoggedOutNav>
+          </NavigationContainer>
+        </AppearanceProvider>
+      </ThemeProvider>
+    </ApolloProvider>
   );
 }
+
+AppRegistry.registerComponent("Booker", () => App);

@@ -1,3 +1,4 @@
+import { ActivityIndicator } from "react-native";
 import styled from "styled-components/native";
 import { sharedColor, styledSize } from "../themeStyles";
 
@@ -15,10 +16,14 @@ const AccentBtnText = styled.Text`
   text-align: center;
 `;
 
-export default function AccentBtn({ text, onPress, disabled }) {
+export default function AccentBtn({ text, onPress, disabled, loading }) {
   return (
     <AccentBtnContainer onPress={onPress} disabled={disabled}>
-      <AccentBtnText>{text}</AccentBtnText>
+      {loading ? (
+        <ActivityIndicator color={"white"} />
+      ) : (
+        <AccentBtnText>{text}</AccentBtnText>
+      )}
     </AccentBtnContainer>
   );
 }

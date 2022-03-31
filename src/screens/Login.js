@@ -4,6 +4,17 @@ import { sharedColor } from "../themeStyles";
 import { useRef } from "react";
 import AccentBtn from "../components/AccentBtn";
 import { Controller, useForm } from "react-hook-form";
+import { gql, useMutation, useQuery } from "@apollo/client";
+
+const LOGIN_MUTATION = gql`
+  mutation login($username: String!, $password: String!) {
+    login(usernmae: $username, password: $password) {
+      ok
+      token
+      error
+    }
+  }
+`;
 
 export default function Login({ navigation }) {
   const {
@@ -16,14 +27,22 @@ export default function Login({ navigation }) {
     ref?.current?.focus();
   };
   const onValidSubmit = data => {
+    const { username, password } = data;
+    console.log(username, password);
     console.log(data);
+    loginMutation({ variables: { username, password } });
   };
   const onChange = arg => {
     return {
       value: arg.nativeEvent.text,
     };
   };
-
+  const onCompleted = data => {
+    console.log(data);
+  };
+  const [loginMutation, { loading }] = useMutation(LOGIN_MUTATION, {
+    onCompleted,
+  });
   return (
     <AuthLayout>
       <Controller
@@ -70,6 +89,7 @@ export default function Login({ navigation }) {
         text={"Log In"}
         onPress={handleSubmit(onValidSubmit)}
         disabled={!isValid}
+        loading={loading}
       />
     </AuthLayout>
   );
